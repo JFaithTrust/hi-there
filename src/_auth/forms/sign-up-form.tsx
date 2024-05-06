@@ -9,7 +9,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Loader} from "@/components/shared";
-import useCreateUserAccountMutation from "@/lib/react-query/queries-mutations.ts";
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queries-mutations";
 
 const SignUpForm = () => {
   const { toast } = useToast();
@@ -27,8 +27,8 @@ const SignUpForm = () => {
   });
 
   // Queries
-  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccountMutation();
-  // const { mutateAsync: signInAccount, isLoading: isSigningInUser } = useSignInAccount();
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
 
   // Handler
   const handleSignup = async (user: z.infer<typeof SignupValidation>) => {
@@ -41,18 +41,18 @@ const SignUpForm = () => {
         return;
       }
 
-      // const session = await signInAccount({
-      //   email: user.email,
-      //   password: user.password,
-      // });
+      const session = await signInAccount({
+        email: user.email,
+        password: user.password,
+      });
 
-      // if (!session) {
-      //   toast({ title: "Something went wrong. Please login your new account", });
-      //
-      //   navigate("/sign-in");
-      //
-      //   return;
-      // }
+      if (!session) {
+        toast({ title: "Something went wrong. Please login your new account", });
+      
+        navigate("/sign-in");
+      
+        return;
+      }
 
       const isLoggedIn = await checkAuthUser();
 

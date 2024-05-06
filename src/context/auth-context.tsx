@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {IUser} from "@/types";
+import { getCurrentUser } from "@/lib/appwrite/api";
 
 export const INITIAL_USER = {
   id: "",
@@ -40,20 +41,20 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
   const checkAuthUser = async () => {
     setIsLoading(true);
     try {
-      // const currentAccount = await getCurrentUser();
-      // if (currentAccount) {
-      //   setUser({
-      //     id: currentAccount.$id,
-      //     name: currentAccount.name,
-      //     username: currentAccount.username,
-      //     email: currentAccount.email,
-      //     imageUrl: currentAccount.imageUrl,
-      //     bio: currentAccount.bio,
-      //   });
-      //   setIsAuthenticated(true);
-      //
-      //   return true;
-      // }
+      const currentAccount = await getCurrentUser();
+      if (currentAccount) {
+        setUser({
+          id: currentAccount.$id,
+          name: currentAccount.name,
+          username: currentAccount.username,
+          email: currentAccount.email,
+          imageUrl: currentAccount.imageUrl,
+          bio: currentAccount.bio,
+        });
+        setIsAuthenticated(true);
+      
+        return true;
+      }
 
       return false;
     } catch (error) {
