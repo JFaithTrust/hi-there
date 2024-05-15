@@ -1,4 +1,4 @@
-const AllUsers = () => {4
+const AllUsers = () => {
   return (
     <div>AllUsers</div>
   )

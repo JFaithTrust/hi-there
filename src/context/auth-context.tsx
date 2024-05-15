@@ -70,7 +70,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
     if(
       cookieFallback === "[]" ||
-      cookieFallback === undefined ||
+      // cookieFallback === undefined ||
       cookieFallback === null
     ) {
       navigate("/sign-in");

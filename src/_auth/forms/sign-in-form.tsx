@@ -9,12 +9,13 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Loader} from "@/components/shared";
+import {useSignInAccount} from "@/lib/react-query/queries-mutations.ts";
 
 const SignInForm = () => {
   const { toast } = useToast()
   const navigate = useNavigate()
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-  // const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
+  const { mutateAsync: signInAccount, isPending } = useSignInAccount();
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
@@ -25,13 +26,13 @@ const SignInForm = () => {
   });
 
   const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
-    // const session = await signInAccount(user);
+    const session = await signInAccount(user);
 
-    // if (!session) {
-    //   toast({ title: "Login failed. Please try again." });
-    //
-    //   return;
-    // }
+    if (!session) {
+      toast({ title: "Login failed. Please try again." });
+
+      return;
+    }
 
     const isLoggedIn = await checkAuthUser();
 
@@ -86,7 +87,7 @@ const SignInForm = () => {
 
           <Button type="submit" className="shad-button_primary">
             {/* isLoading || */}
-            {isUserLoading ? (
+            {isUserLoading || isPending ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
